@@ -1,0 +1,123 @@
+#!/bin/bash
+total_files=0      #1
+total_dir=0        #2
+recursion_level=0  #3
+cancel_count=0     #4
+cancel_val=10
+whitespace=""
+
+
+checkcancel(){
+    if [ $cancel_count = $cancel_val ] ; then
+        etch "Cancel Opportunity! Nows your chance!"
+        read -s -p "Press Enter to Continue, or Ctrl+C to stop..."
+        etch""
+        cancel_count=0
+    else cancel_count=$(($cancel_count + 1)) 
+    fi
+}
+
+settemp(){
+    echo $total_files > "$TEMP"
+    echo $total_dir >> "$TEMP"
+    echo $recursion_level >> "$TEMP"
+    echo $cancel_count >> "$TEMP"
+}
+
+updatetemps(){
+    temp=$(cat "$TEMP")
+    count=1
+    for t in $temp ; do
+        case $count in
+            1)
+                total_files=$t
+                ;;
+            2)
+                total_dir=$t
+                ;;
+            4)
+                cancel_count=$t
+                ;; 
+        esac
+        count=$(($count + 1))
+    done
+}
+
+if [ -z "$1" ];
+    then exec etch "USAGE: vicurse dir file_ext "
+fi
+
+if [ -z "$3" ]; then 
+    TEMP=$(mktemp) ;        
+    else TEMP=$3
+    temp=$(cat "$TEMP")
+#    echo $temp
+    count=1
+    for t in $temp ; do
+        case $count in
+            1)
+                total_files=$t
+                ;;
+            2)
+                total_dir=$t
+                ;;
+            3)
+                recursion_level=$(($t + 1))
+                ;;
+            4)
+                cancel_count=$t
+                ;; 
+        esac
+        count=$(($count + 1))
+    done
+    
+fi
+
+etch(){
+    echo "$whitespace$1"
+}
+#shopt -s expand_aliases
+#source $0
+
+for num in $(eval echo {1..$recursion_level}) ;  do
+   if [ $recursion_level != 0 ] ; then whitespace+=" " ; fi
+done
+
+if [ "$1" = "." ];
+    then cur_dir="$(basename $PWD)" ; else cur_dir="$1"
+fi
+
+
+
+
+total_dir=$(($total_dir + 1))
+cd $1 || exec echo "Entering Directory Failed. Is it real/do you have permission?"
+
+dir="$(ls -Ap . | grep /)"
+dir_size="$(ls -Ap | grep -c /)"
+
+etch "Found $dir_size directories in $cur_dir"
+#etch "$recursion_level"
+for i in $dir ; do checkcancel
+    etch "Running recursivly in directory $i"
+    settemp
+    $0 $i $2 $TEMP
+    updatetemps
+done
+
+etch "Searching for files in $cur_dir"
+files="$(ls -p | grep $2 | grep -v /)"
+file_size="$(ls -p | grep $2 | grep -cv /)"
+
+etch "Found $file_size files in $cur_dir"
+
+for f in $files ; do checkcancel
+    etch "Opening $f"
+    total_files=$(($total_files + 1))
+    vim $f
+done
+
+settemp
+etch "Done in $(basename $cur_dir)!"
+
+#if true ; then echo cat $TEMP ; fi

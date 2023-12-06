@@ -1,0 +1,18 @@
+#!/bin/bash
+if [ -z "$1" ];
+then
+    exec echo "You must specify a destination to plant your trees ;-(" 
+fi
+if [[ $1 != *"/" ]];
+then
+    exec echo "I can only plant trees in directories. Please include '/'"
+fi
+dir="$(ls -Ap | grep /)"
+echo Found Directories: $dir
+read -s -p "Press enter to continue, or Ctrl+c to cancel..."
+echo ""
+for i in $dir
+do
+	echo Planting tree ${i::-1}.tree at $1
+    tree ./$i >> $1${i::-1}.tree
+done

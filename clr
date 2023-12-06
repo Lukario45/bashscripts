@@ -1,0 +1,12 @@
+#!/bin/bash
+files="$(ls -a | grep .clear.)"
+echo Found Scripts: $files
+read -s -p "Press enter to continue, or Ctrl+c to cancel..."
+echo ""
+for i in $files
+do
+	t=$PWD/$i
+	echo Running: $i
+	$t
+	
+done

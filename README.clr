@@ -1,0 +1,5 @@
+Script: clear.sh
+Sub-scripts : .clear.ada
+
+clear finds all of the scripts with .clear. in their name in the working
+  directory, and then executes them in order.

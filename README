@@ -1,0 +1,7 @@
+Master Directory for Self-Made Scripts
+
+Scripts which are not hidden are meant to be within the .bashrc so that they
+  may be used within any directory
+
+Scripts that are hidden are meant to be copied into the specific directory that
+  they will be used in

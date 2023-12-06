@@ -1,0 +1,5 @@
+#!/bin/bash
+SCRIPT_HOME="$(dirname "$(realpath $0)")"
+echo Removing script called $1 from $PWD
+
+rm $PWD/.$1

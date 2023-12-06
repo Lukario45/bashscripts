@@ -1,0 +1,6 @@
+#!/bin/bash
+SCRIPT_HOME="$(dirname "$(realpath $0)")"
+echo Copying script called $1 to $PWD
+
+cp $SCRIPT_HOME/.$1 $PWD
+chmod u+x $PWD/.$1

@@ -1,0 +1,22 @@
+#!/bin/bash
+if [ -z "$1" ];
+    then exec echo "USAGE: vicurse dir file_ext "
+fi
+
+if [ "$1" = "." ];
+    then cur_dir="$(basename $PWD)" ; else cur_dir="$1"
+fi
+
+cd $1 || exec echo "Entering Directory Failed. Is it real/do you have permission?"
+
+dir="$(ls -Ap . | grep /)"
+dir_size="$(ls -Ap | grep -c /)"
+
+echo "Found $dir_size directories in $cur_dir"
+
+for i in $dir ; do 
+    echo "Moving into directory $i"
+    $0 $i $2
+done
+
+echo "Done in $(basename $cur_dir)!"

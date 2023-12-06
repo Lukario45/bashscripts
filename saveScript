@@ -1,0 +1,6 @@
+#!/bin/bash
+SCRIPT_HOME="$(dirname "$(realpath $0)")"
+echo Saveing script called $1
+
+cp -n $PWD/.$1 $SCRIPT_HOME/
+chmod u-x $SCRIPT_HOME/.$1
